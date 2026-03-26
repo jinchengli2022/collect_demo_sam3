@@ -154,3 +154,5 @@ Thumbs.db
 
 # Data
 data/
+collect_data/
+test/snapshots/
