@@ -88,7 +88,7 @@ python video_sam3.py <session_dir> --prompts "目标1" "目标2" ...
 
 ```bash
 python video_sam3.py collect_data/session_20260326_172631 \
-    --prompts "door handle" "person"
+    --prompts "door handle" "person" --debug-vis
 ```
 
 ### 参数说明

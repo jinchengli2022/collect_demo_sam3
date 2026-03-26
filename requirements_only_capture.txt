@@ -1,17 +1,3 @@
-# 运行 collect_scripts/l515_capture.py 所需的最小依赖
-# Python >= 3.8（推荐 3.12）
-# 标准库（无需安装）：json, os, signal, sys, datetime, pathlib
-
-# Intel RealSense SDK Python 绑定
-# 注意：pyrealsense2 依赖系统级 librealsense2，需提前安装：
-#   Ubuntu: https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md
-#   或使用 Intel 官方 apt 源安装 librealsense2-dev
-
-# https://www.cnblogs.com/gssl/p/18890328
-pyrealsense2>=2.57.7
-
-# 图像处理
-opencv-python>=4.13.0
-
-# 数值计算
-numpy>=2.4.3
+pyrealsense2
+opencv-python
+numpy
