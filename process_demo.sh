@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SESSION_DIR="collect_data/mouse"
-PROMPTS=("black mouse")
+PROMPTS=("black mouse")     # 操作物体在前，参考物体在后
 
 # 可按需取消注释
 # FRAME_INDEX="--frame-index 0"
@@ -21,4 +21,4 @@ python collect_scripts/depth_extract.py "$SESSION_DIR" \
     --debug-vis
 
 python collect_scripts/visualize_trajectory.py "$SESSION_DIR" \
-    --smooth-window 7
+    --smooth-window 10

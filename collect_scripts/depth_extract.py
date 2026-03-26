@@ -175,8 +175,19 @@ def extract_trajectories(
         valid_count = sum(1 for p in traj if p is not None)
         print(f"[Step3] '{prompt}' 完成，有效帧 {valid_count}/{total_frames}")
 
-    _save_json(session_dir, trajectories, fx, fy, cx, cy, fps, total_frames, stat_method)
+    _save_json(session_dir, trajectories, fx, fy, cx, cy, fps, total_frames, stat_method, prompts)
     return trajectories
+
+
+def _find_origin(
+    trajectories: dict[str, list[Optional[tuple[float, float, float]]]],
+    ref_prompt: str,
+) -> tuple[float, float, float]:
+    """返回 ref_prompt 轨迹中第一个有效帧的坐标，作为平移原点。"""
+    for pt in trajectories[ref_prompt]:
+        if pt is not None:
+            return pt
+    return (0.0, 0.0, 0.0)
 
 
 def _save_json(
@@ -189,11 +200,16 @@ def _save_json(
     fps: float,
     total_frames: int,
     stat_method: str,
+    prompts: list[str],
 ) -> None:
+    ref_prompt = prompts[0]
+    ox, oy, oz = _find_origin(trajectories, ref_prompt)
+    print(f"[Step3] 坐标原点平移至 '{ref_prompt}' 起始帧: X={ox:.1f} Y={oy:.1f} Z={oz:.1f} mm")
+
     json_traj: dict[str, list[object]] = {}
     for prompt, traj in trajectories.items():
         json_traj[prompt] = [
-            [round(p[0], 2), round(p[1], 2), round(p[2], 2)] if p is not None else None
+            [round(p[0] - ox, 2), round(p[1] - oy, 2), round(p[2] - oz, 2)] if p is not None else None
             for p in traj
         ]
 
@@ -203,7 +219,9 @@ def _save_json(
             "fps": fps,
             "total_frames": total_frames,
             "coord_unit": "mm",
-            "coord_system": "camera",
+            "coord_system": "object_relative",
+            "origin_prompt": ref_prompt,
+            "origin_camera_mm": [round(ox, 2), round(oy, 2), round(oz, 2)],
             "stat_method": stat_method,
             "intrinsics": {"fx": fx, "fy": fy, "cx": cx, "cy": cy},
         },
